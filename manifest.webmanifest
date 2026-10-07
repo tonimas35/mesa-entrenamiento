@@ -1,0 +1,32 @@
+{
+  "name": "Mesa de entrenamiento",
+  "short_name": "Mesa",
+  "description": "Mesa para practicar One Piece Card Game contra un bot desde el móvil. Herramienta personal no oficial, sin relación con Bandai.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c1a1f",
+  "theme_color": "#0c1a1f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
