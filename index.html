@@ -2027,6 +2027,79 @@ p {
   font-weight: 700;
   white-space: nowrap;
 }
+
+/* ── Deck lab ─────────────────────────────────────────────────────────── */
+
+.lab-text {
+  min-height: 190px;
+}
+.lab-select {
+  min-height: 44px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--edge);
+  background: var(--surface);
+  color: var(--ink);
+}
+.lab-problems {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--bad);
+  font-size: 13.5px;
+  display: grid;
+  gap: 2px;
+}
+.lab-ok {
+  color: var(--ok);
+}
+.lab-table-wrap {
+  overflow-x: auto;
+}
+.lab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.lab-table th,
+.lab-table td {
+  padding: 7px 6px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  white-space: nowrap;
+}
+.lab-table th[scope="row"],
+.lab-table thead th:first-child {
+  text-align: left;
+  white-space: normal;
+}
+.lab-table thead th {
+  font: 600 13px/1.1 var(--font-display);
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+}
+.lab-table tfoot th,
+.lab-table tfoot td {
+  font-weight: 700;
+  border-bottom: 0;
+}
+.lab-count,
+.lab-ci {
+  color: var(--ink-3);
+  font-size: 12.5px;
+}
+.lab-up {
+  color: var(--ok);
+  font-weight: 700;
+}
+.lab-down {
+  color: var(--bad);
+  font-weight: 700;
+}
+.home-tools {
+  display: grid;
+  gap: 8px;
+}
 </style>
 <style>
 /* Site only (the Artifact platform adds its own): keep clear of the notch and the home bar. */
