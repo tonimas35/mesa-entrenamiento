@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Mesa">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700;800&family=IM+Fell+English+SC&display=swap");
 
 /* A card table, not a form: a felt mat with stitched zones, cards in real
    proportion (63:88) and only two accents: brass for you and your DON!!,
@@ -3473,6 +3473,420 @@ p {
   }
 }
 /* ══ end of Wide screens ═══════════════════════════════════════════════ */
+
+/* ── Tema «Pirata» (Ajustes → Tema; `data-tema` on the root) ─────────────
+   An illustrated background behind the whole app (decoration only on its
+   edges, no text) and warm parchment panels on top. Only colors and
+   backgrounds change here: no size, padding, border or gap, so cards,
+   slots and buttons measure exactly the same as in «Clásico» (the e2e run
+   `site-tema` checks it). Day tokens here; the night ones (dark scheme)
+   at the end of this section override them. */
+:root[data-tema="pirata"] {
+  --mat: #eadcba;
+  --mat-2: #dfcda4;
+  --mat-3: #d2bd8f;
+  --line: #a98b58;
+  --surface: #fbf5e6;
+  --surface-2: #f1e5c8;
+  --sheet: #fdf8ec;
+  --ink: #23170a;
+  --ink-2: #4c3b20;
+  --ink-3: #66522f;
+  --edge: rgba(62, 40, 10, 0.2);
+  --shadow: rgba(48, 30, 6, 0.28);
+  --parchment: #f3e7c9;
+  --parchment-edge: rgba(110, 78, 30, 0.45);
+  background: var(--mat) url("theme/fondo-pc.webp") center / cover no-repeat fixed;
+}
+/* Portrait or narrow screens: the tall picture. */
+@media (orientation: portrait), (max-width: 599px) {
+  :root[data-tema="pirata"] {
+    background-image: url("theme/fondo-movil.webp");
+  }
+}
+:root[data-tema="pirata"] body {
+  background: transparent;
+}
+/* The table: no felt, so the picture shows between and around the halves. */
+:root[data-tema="pirata"] .board {
+  background: transparent;
+}
+:root[data-tema="pirata"] .half {
+  background:
+    linear-gradient(var(--mine-wash), var(--mine-wash)),
+    color-mix(in srgb, var(--parchment) 86%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--brass) 45%, transparent),
+    inset 0 0 18px rgba(120, 84, 30, 0.22),
+    0 2px 10px rgba(40, 24, 4, 0.25);
+}
+:root[data-tema="pirata"] .half-bot {
+  background:
+    linear-gradient(var(--bot-wash), var(--bot-wash)),
+    color-mix(in srgb, var(--parchment) 86%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--crimson) 40%, transparent),
+    inset 0 0 18px rgba(120, 84, 30, 0.22),
+    0 2px 10px rgba(40, 24, 4, 0.25);
+}
+/* Text strips (turn, hand, actions, log): nearly opaque for contrast. */
+:root[data-tema="pirata"] .game > .topbar,
+:root[data-tema="pirata"] .actionbar,
+:root[data-tema="pirata"] .log-panel {
+  background: color-mix(in srgb, var(--parchment) 93%, transparent);
+}
+:root[data-tema="pirata"] .game > .topbar {
+  box-shadow: inset 0 -1px 0 var(--parchment-edge);
+}
+:root[data-tema="pirata"] .hand-wrap {
+  border-top-color: var(--parchment-edge);
+  background: linear-gradient(
+    color-mix(in srgb, var(--mat-2) 93%, transparent),
+    color-mix(in srgb, var(--parchment) 93%, transparent)
+  );
+}
+/* Other screens: their column becomes a parchment sheet; the tutorial keeps its mat. */
+:root[data-tema="pirata"] .screen:not(.tut-screen) > .home,
+:root[data-tema="pirata"] .tut-screen > .tut {
+  min-height: 100%;
+  background: color-mix(in srgb, var(--parchment) 94%, transparent);
+  box-shadow:
+    0 0 0 1px var(--parchment-edge),
+    0 0 24px rgba(40, 24, 4, 0.3);
+}
+
+/* «Pirata», step 2: the game as a pirate table. Wooden signs (top bar,
+   «Terminar turno» and primary buttons), a navy card back with a compass
+   rose, burnt-edge parchment for the hand and the log, and an old-map
+   display face for titles. Still colors, backgrounds, inset shadows and
+   fonts of single-line boxes with a fixed line height only: nothing here
+   changes a size (the buttons keep their own font, since their width
+   follows their text). */
+:root[data-tema="pirata"] {
+  --wood: #c99a62;
+  --wood-2: #b5824b;
+  --wood-edge: #5a3414;
+  --wood-ink: #2a1505;
+  --wood-top: #d4a86f;
+  --wood-pale-1: #e7cfa4;
+  --wood-pale-2: #d3b07c;
+  --sign-me: #4d2c00;
+  --sign-bot: #8a1724;
+  --sign-ink-2: #3b2208;
+  --sign-shadow: 0 1px 0 rgba(255, 236, 196, 0.45);
+  --back: #14254a;
+  --back-2: #1f3a6e;
+  --back-rule: #d9a845;
+  --font-sign:
+    "IM Fell English SC", "IM Fell English", "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
+    serif;
+  --wood-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='64'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.32' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.27 0 0 0 0 0.13 0 0 0 0 0.04 1.1 0 0 0 -0.42'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.27 0 0 0 0 0.1 0.5 0 0 0 -0.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+
+/* Wooden signs: planks with grain, a darker edge and four nails. */
+:root[data-tema="pirata"] .game > .topbar {
+  color: var(--wood-ink);
+  background:
+    radial-gradient(
+      circle at 7px 7px,
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    radial-gradient(
+      circle at calc(100% - 7px) 7px,
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    radial-gradient(
+      circle at 7px calc(100% - 7px),
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    radial-gradient(
+      circle at calc(100% - 7px) calc(100% - 7px),
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    var(--wood-grain) 0 0 / 320px 64px,
+    linear-gradient(var(--wood), var(--wood-2));
+  box-shadow:
+    inset 0 0 0 2px var(--wood-edge),
+    inset 0 0 0 4px rgba(255, 230, 180, 0.18),
+    inset 0 -6px 10px rgba(60, 30, 6, 0.3),
+    0 2px 6px rgba(40, 20, 4, 0.35);
+}
+:root[data-tema="pirata"] .game > .topbar .status-turn {
+  font-family: var(--font-sign);
+  font-weight: 400;
+}
+:root[data-tema="pirata"] .game > .topbar .status-turn .me {
+  color: var(--sign-me);
+}
+:root[data-tema="pirata"] .game > .topbar .status-turn .bot {
+  color: var(--sign-bot);
+}
+:root[data-tema="pirata"] .game > .topbar .status-phase {
+  color: var(--sign-ink-2);
+}
+:root[data-tema="pirata"] .game > .topbar .icon-btn {
+  color: var(--wood-ink);
+}
+:root[data-tema="pirata"] .btn-primary,
+:root[data-tema="pirata"] .btn-end {
+  color: var(--wood-ink);
+  border-color: var(--wood-edge);
+  background:
+    radial-gradient(
+      circle at 7px 50%,
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    radial-gradient(
+      circle at calc(100% - 7px) 50%,
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    var(--wood-grain) 0 0 / 320px 64px,
+    linear-gradient(var(--wood-top), var(--wood-2));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 186, 0.35),
+    inset 0 -3px 6px rgba(60, 30, 6, 0.32),
+    0 1px 3px rgba(40, 20, 4, 0.35);
+  text-shadow: var(--sign-shadow);
+}
+/* Actions still pending: the same sign, weathered and paler. */
+:root[data-tema="pirata"] .btn-end:not(.btn-primary) {
+  background:
+    radial-gradient(
+      circle at 7px 50%,
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    radial-gradient(
+      circle at calc(100% - 7px) 50%,
+      #f1dfb4 0 1px,
+      #6b4a26 1.6px 2.4px,
+      rgba(40, 20, 4, 0.35) 3px,
+      transparent 3.6px
+    ),
+    var(--wood-grain) 0 0 / 320px 64px,
+    linear-gradient(var(--wood-pale-1), var(--wood-pale-2));
+}
+
+/* Card back: navy, a thin gold rule and a compass rose. */
+:root[data-tema="pirata"] .face.back {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23d9a845'%3E%3Ccircle cx='50' cy='50' r='31' stroke-width='1.6'/%3E%3Ccircle cx='50' cy='50' r='26' stroke-width='0.7'/%3E%3C/g%3E%3Cg transform='rotate(45 50 50)'%3E%3Cpath d='M50 22 L54 50 L50 50Z M50 78 L46 50 L50 50Z M22 50 L50 46 L50 50Z M78 50 L50 54 L50 50Z' fill='%23f0cf7a'/%3E%3Cpath d='M50 22 L46 50 L50 50Z M50 78 L54 50 L50 50Z M22 50 L50 54 L50 50Z M78 50 L50 46 L50 50Z' fill='%23a7782a'/%3E%3C/g%3E%3Cpath d='M50 6 L56 50 L50 50Z M50 94 L44 50 L50 50Z M6 50 L50 44 L50 50Z M94 50 L50 56 L50 50Z' fill='%23f0cf7a'/%3E%3Cpath d='M50 6 L44 50 L50 50Z M50 94 L56 50 L50 50Z M6 50 L50 56 L50 50Z M94 50 L50 44 L50 50Z' fill='%23b8862f'/%3E%3Ccircle cx='50' cy='50' r='3.2' fill='%2314254a' stroke='%23f0cf7a' stroke-width='1.4'/%3E%3C/svg%3E")
+      center / 74% auto no-repeat,
+    radial-gradient(circle at 50% 50%, var(--back-2) 0 30%, transparent 72%),
+    var(--back);
+}
+:root[data-tema="pirata"] .face.back::before {
+  inset: 4cqi;
+  border-width: 0.8cqi;
+  border-radius: 3cqi;
+  opacity: 1;
+}
+:root[data-tema="pirata"] .back-mark {
+  display: none;
+}
+
+/* Hand and log: parchment with a soft burnt edge. */
+:root[data-tema="pirata"] .hand-wrap,
+:root[data-tema="pirata"] .log-panel {
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 58%, rgba(120, 62, 14, 0.26) 100%),
+    var(--paper-grain) 0 0 / 200px 200px,
+    var(--parchment);
+  box-shadow:
+    inset 0 0 18px rgba(98, 48, 8, 0.42),
+    inset 0 0 3px rgba(70, 30, 4, 0.55);
+}
+
+/* Titles in the old-map face (single line boxes with a fixed line height). */
+:root[data-tema="pirata"] .home-title,
+:root[data-tema="pirata"] .section-title,
+:root[data-tema="pirata"] .log-panel-title {
+  font-family: var(--font-sign);
+  font-weight: 400;
+}
+
+/* «Pirata», step 3: the other screens (home, Mis mazos, summary and review,
+   lab, tutorial player). Same background, the parchment sheet of step 1,
+   wooden primary buttons, parchment secondary buttons with an ink border and
+   the old-map face for headings. Accent inks are darkened so every text on
+   parchment keeps at least 4.5:1. Colors, backgrounds and shadows only. */
+:root[data-tema="pirata"] {
+  --brass-strong: #6e4600;
+  --crimson: #a3202e;
+  --crimson-soft: rgba(163, 32, 46, 0.16);
+  --ok: #1a6340;
+  --bad: #962b22;
+  --focus: #1747a6;
+  --ink-line: #5b3d1c;
+}
+
+/* Secondary buttons: parchment with an ink border (same 1px border). */
+:root[data-tema="pirata"]
+  .btn:not(.btn-primary, .btn-end, .btn-quiet, .btn-attack, .btn-danger, .btn-pass, .btn-don) {
+  color: var(--ink);
+  border-color: var(--ink-line);
+  background:
+    var(--paper-grain) 0 0 / 200px 200px,
+    linear-gradient(var(--surface), var(--parchment));
+  box-shadow: inset 0 0 6px rgba(98, 48, 8, 0.18);
+}
+:root[data-tema="pirata"] .seg {
+  color: var(--ink-2);
+  border-color: var(--ink-line);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+}
+:root[data-tema="pirata"] .seg[aria-checked="true"] {
+  color: var(--sheet);
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+/* Cards and rows on the sheet: parchment with grain and a soft burnt edge. */
+:root[data-tema="pirata"] .continue-card,
+:root[data-tema="pirata"] .tut-entry,
+:root[data-tema="pirata"] .transfer-box,
+:root[data-tema="pirata"] .review-item,
+:root[data-tema="pirata"] .dk-grid .dk-card {
+  background:
+    var(--paper-grain) 0 0 / 200px 200px,
+    var(--surface);
+  box-shadow: inset 0 0 10px rgba(98, 48, 8, 0.2);
+}
+
+/* Tutorial player: its controls sit on the sheet; the stage keeps its own
+     table and gets a wooden frame drawn outside its box. */
+:root[data-tema="pirata"] .tut-frame {
+  box-shadow:
+    0 0 0 2px var(--wood-edge),
+    0 0 0 5px var(--wood-2),
+    0 0 0 6px var(--wood-edge),
+    0 3px 12px rgba(40, 20, 4, 0.35);
+  border-radius: 2px;
+}
+
+/* Headings in the old-map face. */
+:root[data-tema="pirata"] .tut-name,
+:root[data-tema="pirata"] .sheet-title,
+:root[data-tema="pirata"] .dk-group-title {
+  font-family: var(--font-sign);
+  font-weight: 400;
+}
+
+/* «Pirata» at night (dark scheme, from the system unless data-theme forces
+   it): night backgrounds, dark warm parchment with light ink, darker wood
+   with light letters; every text keeps at least 4.5:1. «Clásico» dark is the
+   block at the top of this file, untouched. */
+@media (prefers-color-scheme: dark) {
+  :root[data-tema="pirata"]:not([data-theme="light"]) {
+    --mat: #1d1710;
+    --mat-2: #251d14;
+    --mat-3: #2e2419;
+    --line: #9a7c54;
+    --surface: #33291c;
+    --surface-2: #2b2217;
+    --sheet: #2e2519;
+    --ink: #f1e4c6;
+    --ink-2: #d6c4a0;
+    --ink-3: #b7a37e;
+    --edge: rgba(241, 228, 198, 0.16);
+    --shadow: rgba(0, 0, 0, 0.55);
+    --parchment: #2f261a;
+    --parchment-edge: rgba(200, 150, 80, 0.35);
+    --wood: #6e4a28;
+    --wood-2: #573818;
+    --wood-edge: #2a1708;
+    --wood-ink: #f7e9c8;
+    --wood-top: #7d5530;
+    --wood-pale-1: #4a3826;
+    --wood-pale-2: #3d2d1d;
+    --sign-me: #f2c566;
+    --sign-bot: #ffc0b8;
+    --sign-ink-2: #e5d3ae;
+    --sign-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+    --back: #0f1b36;
+    --back-2: #1a2f5a;
+    --back-rule: #c99a3e;
+    --brass-strong: #f2c566;
+    --crimson: #ff6b78;
+    --crimson-soft: rgba(255, 107, 120, 0.2);
+    --ok: #5fcf92;
+    --bad: #f58a7e;
+    --focus: #8fb8ff;
+    --ink-line: #a88a5e;
+    color-scheme: dark;
+    background-image: url("theme/fondo-pc-noche.webp");
+  }
+}
+:root[data-tema="pirata"][data-theme="dark"] {
+  --mat: #1d1710;
+  --mat-2: #251d14;
+  --mat-3: #2e2419;
+  --line: #9a7c54;
+  --surface: #33291c;
+  --surface-2: #2b2217;
+  --sheet: #2e2519;
+  --ink: #f1e4c6;
+  --ink-2: #d6c4a0;
+  --ink-3: #b7a37e;
+  --edge: rgba(241, 228, 198, 0.16);
+  --shadow: rgba(0, 0, 0, 0.55);
+  --parchment: #2f261a;
+  --parchment-edge: rgba(200, 150, 80, 0.35);
+  --wood: #6e4a28;
+  --wood-2: #573818;
+  --wood-edge: #2a1708;
+  --wood-ink: #f7e9c8;
+  --wood-top: #7d5530;
+  --wood-pale-1: #4a3826;
+  --wood-pale-2: #3d2d1d;
+  --sign-me: #f2c566;
+  --sign-bot: #ffc0b8;
+  --sign-ink-2: #e5d3ae;
+  --sign-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+  --back: #0f1b36;
+  --back-2: #1a2f5a;
+  --back-rule: #c99a3e;
+  --brass-strong: #f2c566;
+  --crimson: #ff6b78;
+  --crimson-soft: rgba(255, 107, 120, 0.2);
+  --ok: #5fcf92;
+  --bad: #f58a7e;
+  --focus: #8fb8ff;
+  --ink-line: #a88a5e;
+  color-scheme: dark;
+  background-image: url("theme/fondo-pc-noche.webp");
+}
+@media (orientation: portrait), (max-width: 599px) {
+  @media (prefers-color-scheme: dark) {
+    :root[data-tema="pirata"]:not([data-theme="light"]) {
+      background-image: url("theme/fondo-movil-noche.webp");
+    }
+  }
+  :root[data-tema="pirata"][data-theme="dark"] {
+    background-image: url("theme/fondo-movil-noche.webp");
+  }
+}
 </style>
 <style>
 /* Site only (the Artifact platform adds its own): keep clear of the notch and the home bar. */
