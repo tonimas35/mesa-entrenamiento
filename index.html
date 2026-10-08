@@ -2100,6 +2100,1379 @@ p {
   display: grid;
   gap: 8px;
 }
+
+/* ── Tutorial «Cómo se juega» (src/ui/tutorial) ─────────────────────────
+   Everything of the tutorial lives in this block. Its stage reuses the
+   table's own pieces (.card, .face, .pile-count, .don, .who, .slot-empty,
+   .ov-don, .ov-power); positions come from model.ts as percentages of a
+   1000 × 1400 stage and every move is a transition scaled by the speed. */
+
+.tut-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--edge);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+}
+.tut-entry-play {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--brass);
+  color: var(--on-brass);
+}
+.tut-entry-play svg {
+  width: 22px;
+  height: 22px;
+  margin-left: 3px;
+}
+.tut-entry-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tut-entry-title {
+  font: 700 21px/1.1 var(--font-display);
+  letter-spacing: 0.01em;
+}
+.tut-entry-meta {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.tut {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2px 8px 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+}
+.tut-top {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+  min-height: 48px;
+}
+.tut-head {
+  min-width: 0;
+  line-height: 1.15;
+}
+.tut-name {
+  font: 700 20px/1.05 var(--font-display);
+  letter-spacing: 0.01em;
+}
+.tut-chapter {
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tut-clock {
+  font: 600 14px/1 var(--font-display);
+  color: var(--ink-2);
+  padding-right: 6px;
+  white-space: nowrap;
+}
+
+/* The stage keeps the whole player on one phone screen. */
+.tut-frame {
+  position: relative;
+  width: min(100%, max(240px, calc((100dvh - 304px) * 0.7143)));
+  margin: 0 auto;
+}
+.tut-stage {
+  --tut-move: calc(520ms / var(--tut-rate, 1));
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1000 / 1400;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px var(--edge);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 3px,
+      color-mix(in srgb, var(--ink) 2.5%, transparent) 3px 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 3px,
+      color-mix(in srgb, var(--ink) 2.5%, transparent) 3px 4px
+    ),
+    var(--mat);
+}
+.tut-stage > * {
+  position: absolute;
+}
+.tut-half {
+  border-radius: 14px;
+}
+.tut-half-op {
+  background: var(--bot-wash);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--crimson) 28%, transparent);
+}
+.tut-half-me {
+  background: var(--mine-wash);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brass) 30%, transparent);
+}
+.tut-hand-band {
+  border-top: 1px solid var(--line);
+  background: linear-gradient(var(--mat-2), transparent);
+}
+.tut-stage .slot-empty {
+  font-size: 9.5px;
+}
+.tut-pile .face {
+  position: absolute;
+  inset: 0;
+}
+.tut-life-card {
+  position: absolute;
+  left: 6%;
+  width: 88%;
+}
+.tut-life-card .face {
+  position: relative;
+}
+.tut-trash-filler .face {
+  filter: saturate(0.55) brightness(0.88);
+}
+.tut-stage .pile-count {
+  font-size: 10px;
+  padding: 1px 5px;
+  z-index: 3;
+}
+.tut-stage .pile-count .num {
+  font-size: 13px;
+}
+.tut-stage .tut-trash-count {
+  bottom: auto;
+  transform: translate(-50%, calc(-100% - 3px));
+  z-index: 26;
+}
+.tut-who {
+  transform: translateY(-50%);
+  font-size: 13px;
+}
+.tut-dondeck-count {
+  transform: translateY(-50%);
+  font: 700 13px/1 var(--font-display);
+  color: var(--ink-2);
+}
+.tut-dondeck-count::after {
+  content: " DON!!";
+  font-weight: 600;
+}
+.tut-op-hand {
+  transform: translate(-100%, -50%);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.tut-rail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--sheet);
+  border: 1px solid var(--edge);
+  box-shadow: 0 2px 8px var(--shadow);
+  font-size: 12.5px;
+  z-index: 5;
+}
+.tut-rail.empty {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.tut-phases {
+  display: flex;
+  gap: 3px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tut-phases li {
+  flex: 1;
+  padding: 3px 2px;
+  border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+  font: 700 11.5px/1.1 var(--font-display);
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+  transition: background-color var(--tut-move) ease;
+}
+.tut-phases li.done {
+  color: var(--ink-2);
+}
+.tut-phases li.on {
+  background: var(--brass);
+  color: var(--on-brass);
+}
+.tut-battle {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font: 800 17px/1 var(--font-display);
+}
+.tut-atk {
+  color: var(--brass-strong);
+}
+.tut-def {
+  color: var(--crimson);
+}
+.tut-vs {
+  font: 600 12px/1 var(--font-body);
+  color: var(--ink-2);
+}
+.tut-verdict {
+  margin-left: 4px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--sheet);
+  font: 700 12.5px/1.2 var(--font-display);
+}
+.tut-rail-text {
+  font: 700 14px/1.1 var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+/* Cards and DON!! move between keyframes. */
+.tut-ent {
+  transition:
+    left var(--tut-move) cubic-bezier(0.3, 0.7, 0.3, 1),
+    top var(--tut-move) cubic-bezier(0.3, 0.7, 0.3, 1),
+    width var(--tut-move) cubic-bezier(0.3, 0.7, 0.3, 1),
+    transform var(--tut-move) ease,
+    opacity calc(var(--tut-move) * 0.6) ease;
+}
+.tut-ent.gone {
+  opacity: 0;
+}
+.tut-stage .card {
+  cursor: default;
+}
+.tut-stage .ov-power {
+  padding: 1px 4px;
+  font-size: 12px;
+}
+.tut-stage .ov-don {
+  top: -4px;
+  left: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 11.5px;
+}
+.tut-stage .card-turn {
+  transition-duration: var(--tut-move);
+}
+.tut-don {
+  transition:
+    left var(--tut-move) cubic-bezier(0.3, 0.7, 0.3, 1),
+    top var(--tut-move) cubic-bezier(0.3, 0.7, 0.3, 1),
+    transform calc(var(--tut-move) * 0.6) ease;
+}
+.tut-stage .don {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.tut-don.rested {
+  transform: rotate(90deg);
+}
+.tut-don.rested .don {
+  opacity: 0.5;
+}
+.tut-instant,
+.tut-instant * {
+  transition: none !important;
+}
+
+.tut-dim {
+  z-index: 30;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mat) 55%, transparent);
+}
+.tut-arrow {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 35;
+  pointer-events: none;
+}
+.tut-arrow-line {
+  stroke: var(--crimson);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 2000;
+  animation: tut-draw calc(var(--tut-move) * 1.2) ease-out both;
+}
+.tut-arrow-head {
+  fill: var(--crimson);
+}
+@keyframes tut-draw {
+  from {
+    stroke-dashoffset: 2000;
+  }
+}
+.tut-spot {
+  z-index: 41;
+  border-radius: 12px;
+  border: 3px solid var(--brass);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--brass) 25%, transparent),
+    0 0 18px color-mix(in srgb, var(--brass) 45%, transparent);
+  pointer-events: none;
+  animation: tut-spot-in var(--tut-move) ease both;
+}
+@keyframes tut-spot-in {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+.tut-label {
+  z-index: 37;
+  transform: translate(-50%, -50%);
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--sheet);
+  font: 700 12px/1.15 var(--font-display);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.tut-scrim {
+  inset: 0;
+  z-index: 40;
+  background: rgba(8, 20, 24, 0.34);
+  animation: tut-fade var(--tut-move) ease both;
+}
+@keyframes tut-fade {
+  from {
+    opacity: 0;
+  }
+}
+.tut-pop {
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  padding: 3px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--edge);
+  background: var(--sheet);
+  color: var(--ink);
+  font: 800 15px/1.1 var(--font-display);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px var(--shadow);
+  animation: tut-pop calc(var(--tut-move) * 0.9) cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+.tut-pop.tone-up {
+  background: var(--brass);
+  border-color: var(--brass-strong);
+  color: var(--on-brass);
+}
+.tut-pop.tone-down {
+  background: var(--crimson);
+  border-color: var(--crimson);
+  color: var(--on-crimson);
+}
+@keyframes tut-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20%) scale(0.8);
+  }
+}
+.tut-stats {
+  left: 6%;
+  right: 6%;
+  top: 37%;
+  z-index: 52;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--edge);
+  background: var(--sheet);
+  box-shadow: 0 8px 22px var(--shadow);
+  animation: tut-fade var(--tut-move) ease both;
+}
+.tut-stat {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+.tut-stat b {
+  font: 800 40px/1 var(--font-display);
+  color: var(--brass-strong);
+}
+.tut-stat small {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--ink-2);
+  text-align: center;
+}
+.tut-banner {
+  left: 50%;
+  top: 60%;
+  z-index: 54;
+  transform: translate(-50%, -50%);
+  padding: 8px 22px;
+  border-radius: 12px;
+  font: 800 34px/1 var(--font-display);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: 0 10px 28px var(--shadow);
+  animation: tut-pop var(--tut-move) cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+.tut-banner.win {
+  background: var(--brass);
+  color: var(--on-brass);
+}
+.tut-banner.loss {
+  background: var(--crimson);
+  color: var(--on-crimson);
+}
+.tut-title {
+  left: 8%;
+  right: 8%;
+  top: 37%;
+  z-index: 56;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 16px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--edge);
+  background: var(--sheet);
+  box-shadow: 0 12px 30px var(--shadow);
+  text-align: center;
+  animation: tut-fade var(--tut-move) ease both;
+}
+.tut-title-kicker {
+  font: 700 13px/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass-strong);
+}
+.tut-title-text {
+  font: 800 34px/1.05 var(--font-display);
+}
+
+.tut-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(8, 20, 24, 0.38);
+  color: #fff;
+  cursor: pointer;
+}
+.tut-poster-play {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--brass);
+  color: var(--on-brass);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.tut-poster-play svg {
+  width: 38px;
+  height: 38px;
+  margin-left: 5px;
+}
+.tut-poster-text {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(9, 20, 24, 0.84);
+  font: 700 18px/1 var(--font-display);
+  letter-spacing: 0.02em;
+}
+.tut-end {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 50%;
+  z-index: 60;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--edge);
+  background: var(--sheet);
+  box-shadow: 0 14px 34px var(--shadow);
+  text-align: center;
+}
+.tut-end-title {
+  font: 800 26px/1.05 var(--font-display);
+}
+.tut-end-text {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.tut-sub {
+  min-height: 5.3em;
+  padding: 2px 6px;
+  font-size: 15px;
+  line-height: 1.32;
+  text-align: center;
+  text-wrap: pretty;
+}
+.tut-progress {
+  position: relative;
+  height: 40px;
+  display: grid;
+  align-items: center;
+  padding-inline: 6px;
+  cursor: pointer;
+  touch-action: none;
+  border-radius: 8px;
+}
+.tut-track {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--edge);
+}
+.tut-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 3px;
+  background: var(--brass);
+}
+.tut-tick {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--ink-3);
+}
+.tut-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 56px;
+}
+.tut-ctl {
+  color: var(--ink);
+}
+.tut-ctl svg {
+  width: 26px;
+  height: 26px;
+}
+.tut-play {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 0;
+  display: grid;
+  place-items: center;
+  background: var(--brass);
+  color: var(--on-brass);
+  cursor: pointer;
+  box-shadow: 0 3px 10px var(--shadow);
+}
+.tut-play svg {
+  width: 28px;
+  height: 28px;
+}
+.tut-controls.slides {
+  gap: 6px;
+}
+.tut-step {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 150px;
+  padding-inline: 6px;
+}
+.tut-step svg {
+  width: 18px;
+  height: 18px;
+}
+.tut-slide {
+  min-width: 44px;
+  text-align: center;
+  font: 700 14px/1 var(--font-display);
+  color: var(--ink-2);
+}
+.tut-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tut-speed {
+  flex: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tut-voice {
+  flex: none;
+  min-width: 100px;
+}
+.tut-voice[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--sheet);
+}
+.tut-slides-note {
+  flex: 1;
+}
+.tut-chapters {
+  margin-top: 14px;
+}
+.tut-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.tut-list-item {
+  width: 100%;
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--edge);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+}
+.tut-list-item[aria-current="true"] {
+  border-color: var(--brass);
+  box-shadow: inset 4px 0 0 var(--brass);
+}
+.tut-list-n {
+  font: 800 20px/1 var(--font-display);
+  color: var(--brass-strong);
+}
+.tut-list-title {
+  font-weight: 700;
+}
+.tut-list-time {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.tut-practice {
+  margin-top: 14px;
+}
+/* ── End of the tutorial block ───────────────────────────────────────── */
+
+/* ══ Mis mazos (decks.tsx, deck-editor.tsx) ══════════════════════════════
+   Everything of the deck builder lives in this block, with the dk- prefix. */
+
+.dk-screen {
+  gap: 20px;
+}
+.dk-editor {
+  gap: 16px;
+  padding-bottom: 0;
+}
+.dk-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--edge);
+  background: var(--sheet);
+  color: var(--ink);
+}
+.dk-name {
+  font: 700 24px/1.1 var(--font-display);
+}
+.dk-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px dashed currentColor;
+  background: var(--brass-soft);
+  color: var(--brass-strong);
+  font: 700 12.5px/1.3 var(--font-display);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  justify-self: start;
+  vertical-align: 1px;
+}
+.dk-unreviewed-line .dk-badge {
+  margin-right: 4px;
+}
+.dk-warning {
+  color: var(--brass-strong);
+}
+.dk-import-text,
+.dk-export {
+  min-height: 150px;
+}
+.dk-pick-head {
+  padding: 14px 0 8px;
+  border-bottom: 1px solid var(--line);
+  font: 600 14px/1 var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.dk-pick-note {
+  padding-block: 8px;
+}
+
+/* Deck list */
+.dk-decks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.dk-deck {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+}
+.dk-deck-main {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  min-height: 44px;
+}
+.dk-thumb {
+  display: block;
+  width: 44px;
+}
+.dk-deck-main .dk-thumb {
+  width: 52px;
+}
+.dk-deck-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.dk-deck-name {
+  font: 700 21px/1.05 var(--font-display);
+  overflow-wrap: break-word;
+}
+.dk-deck-meta {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.dk-deck-flags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.dk-deck-date {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.dk-deck-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.dk-deck-actions .btn {
+  padding: 8px 4px;
+  font-size: 14px;
+}
+
+/* Editor */
+.dk-leader-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-left: 4px solid var(--brass);
+}
+.dk-leader-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.dk-kicker {
+  font: 600 12.5px/1 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.dk-thumb-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  min-width: 44px;
+  min-height: 44px;
+}
+.dk-thumb-big {
+  width: 72px;
+}
+.dk-check {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+}
+.dk-ok {
+  color: var(--ok);
+  font-weight: 700;
+}
+.dk-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.dk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 22px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--ink-2);
+  font: 700 15px/1 var(--font-display);
+  cursor: pointer;
+}
+.dk-chip::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--dot, var(--ink-3));
+  box-shadow: 0 0 0 1px var(--edge);
+}
+.dk-chip[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--sheet);
+}
+.dk-chip.c-red {
+  --dot: var(--c-red);
+}
+.dk-chip.c-green {
+  --dot: var(--c-green);
+}
+.dk-chip.c-blue {
+  --dot: var(--c-blue);
+}
+.dk-chip.c-purple {
+  --dot: var(--c-purple);
+}
+.dk-chip.c-black {
+  --dot: var(--c-black);
+}
+.dk-chip.c-yellow {
+  --dot: var(--c-yellow);
+}
+.dk-leaders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+.dk-leader-tile {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+.dk-leader-tile.on {
+  border-color: var(--brass);
+  background: var(--brass-soft);
+}
+.dk-tile-card {
+  display: block;
+}
+.dk-tile-name {
+  font: 700 15px/1.1 var(--font-display);
+  overflow-wrap: break-word;
+}
+.dk-tile-id {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.dk-cost {
+  display: grid;
+  gap: 6px;
+}
+.dk-types {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.dk-types .seg {
+  padding-inline: 1px;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  overflow-wrap: normal;
+}
+.dk-group {
+  display: grid;
+  gap: 4px;
+}
+.dk-group-title {
+  font: 600 16px/1.1 var(--font-display);
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+}
+.dk-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.dk-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.dk-card-bad {
+  box-shadow: inset 3px 0 0 var(--bad);
+  padding-left: 8px;
+}
+.dk-card-open {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.dk-card-open .dk-thumb {
+  width: 40px;
+}
+.dk-card-text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.dk-card-name {
+  font: 700 17px/1.1 var(--font-display);
+  overflow-wrap: break-word;
+}
+.dk-card-meta {
+  font-size: 12.5px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.dk-card-traits {
+  font-size: 12px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dk-stepper {
+  display: grid;
+  grid-template-columns: 44px 28px 44px;
+  align-items: center;
+}
+.dk-step {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--sheet);
+  color: var(--ink);
+  font: 700 22px/1 var(--font-display);
+  cursor: pointer;
+}
+.dk-step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.dk-count {
+  text-align: center;
+  font: 700 20px/1 var(--font-display);
+  color: var(--ink-3);
+}
+.dk-count.on {
+  color: var(--brass-strong);
+}
+.dk-sheet-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 6px 6px 12px;
+  border-radius: 12px;
+  background: var(--brass-soft);
+}
+.dk-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline: calc(var(--gutter) * -1);
+  padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--sheet);
+  border-top: 1px solid var(--edge);
+  box-shadow: 0 -4px 14px var(--shadow);
+}
+.dk-bar-count {
+  font: 600 15px/1 var(--font-display);
+  color: var(--ink-2);
+}
+.dk-bar-count b {
+  font-size: 24px;
+  color: var(--ink);
+}
+.dk-bar-note {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.dk-bar .btn {
+  min-width: 104px;
+}
+.dk-afin {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--ok);
+  color: var(--sheet);
+  font: 700 12.5px/1.3 var(--font-display);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+.dk-card-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+.dk-afin-count {
+  color: var(--ink-2);
+}
+/* ══ end of Mis mazos ══════════════════════════════════════════════════ */
+
+/* ══ Wide screens (PC) ═══════════════════════════════════════════════════
+   Phones (and anything under the breakpoints below) keep the one-column
+   layout untouched. From 1100 px the home screen gets two columns and Mis
+   mazos shows the deck next to the catalog; from 1200 px the table grows with
+   the window (cards sized by the width and the height left after the hand);
+   from 1600 px × 640 px the log sits beside the table; landscape screens put
+   the tutorial's controls beside a stage as tall as the window. */
+
+/* Column groups of the home screen: invisible on phones. */
+.home-col {
+  display: contents;
+}
+.log-panel {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .home.home-wide {
+    max-width: 1240px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: 48px;
+    align-items: start;
+    padding-block: 40px;
+  }
+  .home-wide > .home-head,
+  .home-wide > .footer {
+    grid-column: 1 / -1;
+  }
+  .home-col {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+  }
+  .home-summary {
+    max-width: 920px;
+  }
+  .home-summary .facts {
+    grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr);
+  }
+
+  /* Mis mazos */
+  .dk-screen {
+    max-width: 1240px;
+  }
+  .dk-decks {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  }
+  .dk-screen > .btn-row,
+  .dk-screen > .dk-import {
+    max-width: 760px;
+  }
+  /* Editor: name and Leader on the left, the checks on the right, then the panes. */
+  .dk-editor {
+    max-width: 1440px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-auto-flow: row dense;
+    column-gap: 32px;
+    align-items: start;
+  }
+  .dk-editor > * {
+    grid-column: 1 / -1;
+  }
+  .dk-editor > .home-head,
+  .dk-editor > .dk-leader-row {
+    grid-column: 1;
+  }
+  .dk-editor > .dk-check {
+    grid-column: 2;
+    grid-row: span 2;
+  }
+  .dk-leaders {
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  }
+  .dk-split {
+    display: grid;
+    grid-template-columns: minmax(340px, 0.8fr) minmax(0, 1.7fr);
+    gap: 32px;
+    align-items: start;
+  }
+  .dk-split-deck,
+  .dk-split-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 12px;
+    min-width: 0;
+  }
+  /* The deck stays in view while the catalog scrolls (above the save bar). */
+  .dk-split-deck {
+    position: sticky;
+    top: 12px;
+    max-height: calc(100dvh - 110px);
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .dk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 12px;
+    border-top: 0;
+  }
+  .dk-grid .dk-card {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 6px;
+    padding: 8px;
+    border: 1px solid var(--edge);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  .dk-grid .dk-card-bad {
+    box-shadow: inset 0 0 0 2px var(--bad);
+  }
+  .dk-grid .dk-card-open {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 8px;
+  }
+  .dk-grid .dk-card-open .dk-thumb {
+    width: min(100%, 150px);
+    justify-self: center;
+  }
+  .dk-grid .dk-stepper {
+    justify-self: center;
+  }
+}
+
+/* The table */
+@media (min-width: 1200px) {
+  .game {
+    max-width: 1920px;
+    --game-hw: clamp(100px, calc(110px + (100dvh - 768px) * 0.128), 156px);
+  }
+  .game .hand {
+    --hw: var(--game-hw);
+  }
+  .half {
+    --gap: 8px;
+    --cw: min(calc((100cqi - 132px) / 10), calc((100dvh - 300px - var(--game-hw) * 1.4) / 2.8));
+  }
+  .status-turn {
+    font-size: 24px;
+  }
+  .status-phase {
+    font-size: 14px;
+  }
+  .ov-power {
+    font-size: 20px;
+  }
+  .rail {
+    width: min(100%, 760px);
+    font-size: 15px;
+  }
+  .don-text,
+  .who {
+    font-size: 17px;
+  }
+  .actionbar-hint {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1600px) and (min-height: 640px) {
+  .game {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-areas:
+      "top top"
+      "board log"
+      "hand log"
+      "dock log";
+  }
+  .game > .topbar {
+    grid-area: top;
+  }
+  .game > .board {
+    grid-area: board;
+  }
+  .game > .hand-wrap {
+    grid-area: hand;
+  }
+  .game > .dock {
+    grid-area: dock;
+  }
+  .log-panel {
+    grid-area: log;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    padding: 12px 16px;
+    border-left: 1px solid var(--line);
+    background: var(--mat-2);
+  }
+  .log-panel-title {
+    font: 700 21px/1.1 var(--font-display);
+    letter-spacing: 0.01em;
+  }
+  .log-panel .log-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    align-content: start;
+  }
+}
+
+/* The tutorial: stage as tall as the window, controls beside it. */
+@media (min-width: 1000px) and (min-aspect-ratio: 5/4) {
+  .tut {
+    max-width: 1500px;
+    grid-template-columns: auto minmax(320px, 440px);
+    grid-template-rows: auto auto auto auto auto auto 1fr;
+    grid-template-areas:
+      "top top"
+      "frame sub"
+      "frame progress"
+      "frame controls"
+      "frame options"
+      "frame chapters"
+      "frame practice";
+    justify-content: center;
+    align-items: start;
+    column-gap: 28px;
+    padding-inline: 16px;
+  }
+  .tut-top {
+    grid-area: top;
+  }
+  .tut-frame {
+    grid-area: frame;
+    width: min(calc(100vw - 440px), calc((100dvh - 72px) * 0.7143));
+  }
+  .tut-sub {
+    grid-area: sub;
+    min-height: 7.5em;
+    padding-top: 12px;
+    font-size: 18px;
+    text-align: left;
+  }
+  .tut-progress {
+    grid-area: progress;
+  }
+  .tut-controls {
+    grid-area: controls;
+  }
+  .tut-options {
+    grid-area: options;
+  }
+  .tut-chapters {
+    grid-area: chapters;
+  }
+  .tut-practice {
+    grid-area: practice;
+  }
+}
+/* ══ end of Wide screens ═══════════════════════════════════════════════ */
 </style>
 <style>
 /* Site only (the Artifact platform adds its own): keep clear of the notch and the home bar. */
