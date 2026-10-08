@@ -3919,6 +3919,38 @@ p {
 .online-ticket .btn-row {
   margin: 0;
 }
+.online-move {
+  flex-basis: 100%;
+  display: grid;
+  gap: 8px;
+}
+.online-clocks .clock-on {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Aviso de versión nueva (solo la web). */
+.update-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface, #fff);
+  color: var(--ink, #111);
+  border-top: 1px solid var(--line, rgba(0, 0, 0, 0.2));
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.18);
+}
+.update-bar p {
+  margin: 0;
+  font-weight: 600;
+}
 </style>
 <style>
 /* Site only (the Artifact platform adds its own): keep clear of the notch and the home bar. */
@@ -3936,6 +3968,6 @@ html {
   </div>
 </div>
 <noscript><p class="boot-note">Esta mesa necesita JavaScript.</p></noscript>
-<script src="app.js"></script>
+<script src="app.js?v=d778843b"></script>
 </body>
 </html>
