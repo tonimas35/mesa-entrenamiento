@@ -3951,6 +3951,150 @@ p {
   margin: 0;
   font-weight: 600;
 }
+
+/* ── Animaciones de la mesa (ui/fx.ts) ──────────────────────────────────── */
+.fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  overflow: hidden;
+}
+.fx-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fx-ghost {
+  pointer-events: none;
+  z-index: 1;
+}
+.fx-flash {
+  position: fixed;
+  border-radius: 8px;
+  background: radial-gradient(circle, rgba(255, 70, 50, 0.85), rgba(200, 20, 20, 0.35) 70%);
+  mix-blend-mode: screen;
+}
+.fx-don {
+  position: fixed;
+  width: 18px;
+  height: 26px;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #f6d36b, #c8952e);
+  border: 1px solid #7a5512;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+.fx-turn {
+  position: fixed;
+  height: 68px;
+  filter: blur(1px);
+}
+.fx-turn-me {
+  background: linear-gradient(90deg, transparent, rgba(224, 176, 74, 0.55), transparent);
+}
+.fx-turn-bot {
+  background: linear-gradient(90deg, transparent, rgba(192, 57, 43, 0.5), transparent);
+}
+.fx-wash {
+  position: fixed;
+  inset: 0;
+}
+.fx-wash-win {
+  background: radial-gradient(ellipse at center, rgba(255, 215, 120, 0.35), transparent 70%);
+}
+.fx-wash-loss {
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 12, 20, 0.55));
+}
+
+/* Brillo tornasolado de los Líderes (solo «Completas»): una franja que va y viene
+   sola y un reflejo que sigue al dedo, al ratón o a la inclinación del móvil. */
+.game[data-anim="completas"] .card.s-leader .face::after,
+.game[data-anim="completas"] .card.s-leader .face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 3;
+}
+.game[data-anim="completas"] .card.s-leader .face::after {
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.28) 42%,
+    rgba(120, 220, 255, 0.22) 48%,
+    rgba(255, 140, 230, 0.2) 54%,
+    transparent 66%
+  );
+  background-size: 260% 260%;
+  mix-blend-mode: soft-light;
+  animation: fx-foil-drift 6.5s ease-in-out infinite alternate;
+}
+.game[data-anim="completas"] .card.s-leader .face::before {
+  background: radial-gradient(
+    circle at calc(var(--foil-x, 0.5) * 100%) calc(var(--foil-y, 0.3) * 100%),
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 230, 160, 0.12) 35%,
+    transparent 60%
+  );
+  mix-blend-mode: overlay;
+}
+@keyframes fx-foil-drift {
+  from {
+    background-position: 0% 20%;
+  }
+  to {
+    background-position: 100% 80%;
+  }
+}
+
+/* Inclinación 3D al pulsar una carta (solo «Completas»). */
+.game[data-anim="completas"] .card .face {
+  transition: transform 140ms ease;
+}
+.game[data-anim="completas"] .card:not(.rested):active .face {
+  transform: perspective(600px) rotateX(calc(var(--rx, 0) * 1deg))
+    rotateY(calc(var(--ry, 0) * 1deg)) scale(1.04);
+}
+
+/* Final de partida: el resultado entra con algo de peso. */
+.game[data-anim="completas"] .result-big {
+  animation: fx-result-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.game[data-anim="completas"] .result-big.win {
+  background: linear-gradient(100deg, currentColor 35%, #f6d36b 50%, currentColor 65%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    fx-result-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both,
+    fx-shine 2.4s 0.5s ease-in-out infinite;
+}
+@keyframes fx-result-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes fx-shine {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .game .card.s-leader .face::after {
+    animation: none;
+  }
+}
 </style>
 <style>
 /* Site only (the Artifact platform adds its own): keep clear of the notch and the home bar. */
@@ -3968,6 +4112,6 @@ html {
   </div>
 </div>
 <noscript><p class="boot-note">Esta mesa necesita JavaScript.</p></noscript>
-<script src="app.js?v=d778843b"></script>
+<script src="app.js?v=00e79afd"></script>
 </body>
 </html>
