@@ -1791,27 +1791,88 @@ p {
   font-size: 13.5px;
   color: var(--ink-2);
 }
-.rps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+.dice-duel {
+  display: flex;
+  justify-content: center;
+  gap: clamp(28px, 10vw, 64px);
+  padding: 6px 0 2px;
 }
-.rps-btn {
-  min-height: 108px;
-  border-radius: 14px;
-  border: 1.5px solid var(--edge);
-  background: var(--surface);
+.dice-side {
   display: grid;
-  place-items: center;
-  gap: 6px;
-  padding: 10px 6px;
-  cursor: pointer;
-  font: 700 19px/1 var(--font-display);
+  justify-items: center;
+  gap: 8px;
+  transition: opacity 0.3s ease;
+}
+.dice-side.dice-lost {
+  opacity: 0.55;
+}
+.dice-name {
+  font: 700 15px/1 var(--font-display);
   letter-spacing: 0.02em;
+  color: var(--ink-2);
 }
-.rps-btn svg {
-  width: 46px;
-  height: 46px;
+.die {
+  width: 84px;
+  height: 84px;
+  filter: drop-shadow(0 4px 6px var(--shadow));
+}
+.die-body {
+  fill: var(--paper);
+  stroke: var(--brass-strong);
+  stroke-width: 2.5;
+}
+.dice-lost .die-body {
+  stroke: var(--edge);
+}
+.die-pip {
+  fill: var(--paper-ink);
+}
+.die-roll {
+  animation: die-tumble 0.34s linear infinite;
+}
+.die-soft {
+  animation: die-shake 0.2s ease-in-out infinite;
+}
+.die-land {
+  animation: die-land 0.32s ease-out;
+}
+@keyframes die-tumble {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-14px) rotate(95deg);
+  }
+  50% {
+    transform: translateY(0) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(265deg);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
+}
+@keyframes die-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+@keyframes die-land {
+  0% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.dice-result {
+  text-align: center;
+  min-height: 1.4em;
 }
 .result-big {
   font: 800 58px/0.9 var(--font-display);
@@ -4112,6 +4173,6 @@ html {
   </div>
 </div>
 <noscript><p class="boot-note">Esta mesa necesita JavaScript.</p></noscript>
-<script src="app.js?v=6a7ba935"></script>
+<script src="app.js?v=de23ea4f"></script>
 </body>
 </html>
